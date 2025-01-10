@@ -61,17 +61,17 @@ cpat -x Hexamer.tsv  -d  logitModel.RData  --top-orf=100  --antisense -g transcr
 - You also specify `-top-orf` to a large number to report all the ORFs.
 - The `-min-orf` is set to 75 by default, same as [NCBI ORFfinder](https://www.ncbi.nlm.nih.gov/orffinder/).
 
-### Plots 
+## Plots 
 The pipeline produces different kinds of plots to give us an idea of the various aspects of the lncRNA data.
 
 
 **Probability distribution plot**: This plot shows the distribution of the coding probability identified using CPAT. The pipeline works better for a bimodal distribution where there is a clear distiction between coding an non coding transcripts. This plot helps us also assign a threshold based on the probability distribution to filter out the protein coding transcripts.
 
 
-**scatter plot of scores**: This is a scatter plot between fickett and hexamer score. It helps identify any association between the fickett and the hexamer scores.
+**Scatter plot of scores**: This is a scatter plot between fickett and hexamer score. It helps identify any association between the fickett and the hexamer scores.
 
 
-**heatmap of loading scores**: This heatmap visualizes the contributions of each variable (e.g., features like hexamer and Fickett scores) to the principal components derived from PCA. The color intensity represents the loading scores, where high absolute values indicate strong contributions. This plot helps understand which features drive the variance observed in the dataset.
+**Heatmap of loading scores**: This heatmap visualizes the contributions of each variable (e.g., features like hexamer and Fickett scores) to the principal components derived from PCA. The color intensity represents the loading scores, where high absolute values indicate strong contributions. This plot helps understand which features drive the variance observed in the dataset.
 
 
 **PCA plot**: This Principal Component Analysis (PCA) plot represents the variance in the dataset reduced to two dimensions. Each point corresponds to a transcript, and its position is determined by the first two principal components. The plot is used to visually cluster coding and non-coding transcripts and evaluate the separation achieved by the features.
