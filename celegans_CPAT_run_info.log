@@ -1,0 +1,25 @@
+2025-01-06 02:31:36 [INFO]  Running CPAT version 3.0.5...
+2025-01-06 02:31:36 [INFO]  Start codons used: [ATG]
+2025-01-06 02:31:36 [INFO]  Stop codons used: [TAG,TAA,TGA]
+2025-01-06 02:31:36 [INFO]  Reading celegans_hexamer.tsv
+2025-01-06 02:31:36 [INFO]  Checking format of "celegans_manual_filtererd_candidate_lncrna.fa"
+2025-01-06 02:31:36 [INFO]  Input gene file is in FASTA format
+2025-01-06 02:31:36 [WARNING]  "celegans_manual_filtererd_candidate_lncrna.fa" is a sequence file. The reference genome file "../../caenorhabditis_elegans.PRJNA13758.WBPS19.genomic.fa"                 will be ignored.
+2025-01-06 02:31:36 [INFO]  Searching for ORFs ...
+2025-01-06 02:31:37 [WARNING]  No ORFs found for STRG.1672.1
+2025-01-06 02:31:37 [WARNING]  No ORFs found for STRG.4862.1
+2025-01-06 02:31:37 [WARNING]  No ORFs found for STRG.5723.1
+2025-01-06 02:31:37 [WARNING]  No ORFs found for STRG.6424.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.10030.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.12248.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.14247.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.14247.5
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.14247.8
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.14248.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.15293.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.16462.1
+2025-01-06 02:31:38 [WARNING]  No ORFs found for STRG.16989.2
+2025-01-06 02:31:38 [INFO]  Calculate coding probability ...
+2025-01-06 02:31:39 [INFO]  Removing file celegans_cpat.ORF_info.tsv
+2025-01-06 02:31:39 [INFO]  Select ORF with the highest coding probability ...
+2025-01-06 02:31:39 [INFO]  Done!
