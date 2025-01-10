@@ -6,22 +6,22 @@ The tool produces a .txt file with the transcript IDs of all the potential lncRN
 ## How to obtain the input files?
 Here we detail the steps on how to run CPAT and obtain the prob.tsv file and the non ORF transcript IDs. Before we run CPAT we perform some manual filtering steps to remove any transcript that are obviously not lncRNAs.
 ### 1. Filtering mono exonic transcripts, Getting a .txt file with the transcript Ids that have more than 2 exons
-We use a tool such as StringTie2 to assemble transcripts from RNA seq data
+We use a tool such as [StringTie2](https://github.com/skovaka/stringtie2) to assemble transcripts from RNA seq data
 ```
-awk '$3=="exon"' <stringtie2_transcripts.gtf> | \
+awk '$3=="exon"' stringtie2_transcripts.gtf | \
 awk '{match($0, /transcript_id "([^"]+)"/, a); print a[1]}' | \
 sort | uniq -c | awk '$1 >=2 {print $2}' > more_than_2_exons.txt
 ```
 ### 2. Retaining only transcripts>= 2 exons in the gtf using the .txt file from the previous step
 ```
 # Use the -w flag for when you need only the exact matches, otherwise we might get partial matching
-grep -F -w -f <(sed 's/^/transcript_id "/; s/$/";/' more_than_2_exons.txt) ../wft.gtf > transcripts_exon_filtered.gtf
+grep -F -w -f <(sed 's/^/transcript_id "/; s/$/";/' more_than_2_exons.txt) stringtie2_transcripts.gtf > transcripts_exon_filtered.gtf
 ```
 ### 3. Filtering the transcripts overlapping with annotated exons
 ```
 # Convert GTF files to BED for overlap comparison
 awk '$3 == "exon" {print $1, $4, $5, $9}' OFS="\t" transcripts_exon_filtered.gtf > transcripts_exons.bed
-awk '$3 == "exon" {print $1, $4, $5, $9}' OFS="\t" annotations.gtf > annotated_exons.bed
+awk '$3 == "exon" {print $1, $4, $5, $9}' OFS="\t" reference_annotations.gtf > annotated_exons.bed
 
 # Use bedtools to remove overlapping transcripts
 bedtools intersect -v -a transcripts_exons.bed -b annotated_exons.bed | cut -f4 > transcripts_no_overlap.txt
@@ -36,7 +36,10 @@ grep -F -w -f <(sed 's/^/transcript_id "/; s/$/";/' transcripts_no_overlap.txt) 
 ```
 
 ### 4. Running CPAT
+Download the CPAT tools based on instructions from the [CPAT manual](https://cpat.readthedocs.io/en/latest/#run-cpat-on-local-computer)
 We need a hexamer table and a logistic regression model set up as inputs to run CPAT. They have prebuilt this for model species but for any other species, we need to run the scripts provided with the CPAT tool to generate these.
+Get the fasta sequences from the transcripts_exon_filtered_no_overlap.gtf using any tool such as [gffread](https://ccb.jhu.edu/software/stringtie/gff.shtml#gffread_ex) 
+
 ```
 # Creating a hexamer table using a fasta inputs of coding and non-coding sequences. This is to train the model to differentiate certain hexamers as coding and non-coding
 
@@ -47,10 +50,10 @@ make_hexamer_tab -c coding_sequences.fa -n noncoding_sequences.fa > sratti_hexam
 make_logitModel -x sratti_hexamer.tsv -c <mRNA.fasta> -n <non_coding_transcripts.fasta> -o <output_prefix>
 
 # Running CPAT
-cpat -x Hexamer.tsv  -d  logitModel.RData  --top-orf=100  --antisense -g test.fa -o output
+cpat -x Hexamer.tsv  -d  logitModel.RData  --top-orf=100  --antisense -g transcripts_exon_filtered_no_overlap.fa -o output
 ```
 [!NOTE]
-- You must specify `-antisense`, otherwise, it will only search ORFs from the sense strand.
-- You also specify `-top-orf` to a large number to report all the ORFs.
-- The `-min-orf` is set to 75 by default, same as [NCBI ORFfinder](https://www.ncbi.nlm.nih.gov/orffinder/).
+You must specify `-antisense`, otherwise, it will only search ORFs from the sense strand.
+You also specify `-top-orf` to a large number to report all the ORFs.
+The `-min-orf` is set to 75 by default, same as [NCBI ORFfinder](https://www.ncbi.nlm.nih.gov/orffinder/).
 
