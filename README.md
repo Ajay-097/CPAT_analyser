@@ -11,18 +11,18 @@ The celegans_cpat.ORF_prob.tsv and celegans_CPAT_run_info.log here are generated
 Here we detail the steps on how to run CPAT and obtain the prob.tsv file and the non ORF transcript IDs. Before we run CPAT we perform some manual filtering steps to remove any transcript that are obviously not lncRNAs.
 ### 1. Filtering mono exonic transcripts, Getting a .txt file with the transcript Ids that have more than 2 exons
 We use a tool such as [StringTie2](https://github.com/skovaka/stringtie2) to assemble transcripts from RNA seq data.
-```
+```bash
 awk '$3=="exon"' stringtie2_transcripts.gtf | \
 awk '{match($0, /transcript_id "([^"]+)"/, a); print a[1]}' | \
 sort | uniq -c | awk '$1 >=2 {print $2}' > more_than_2_exons.txt
 ```
 ### 2. Retaining only transcripts>= 2 exons in the gtf using the .txt file from the previous step
-```
+```bash
 # Use the -w flag for when you need only the exact matches, otherwise we might get partial matching
 grep -F -w -f <(sed 's/^/transcript_id "/; s/$/";/' more_than_2_exons.txt) stringtie2_transcripts.gtf > transcripts_exon_filtered.gtf
 ```
 ### 3. Filtering the transcripts overlapping with annotated exons
-```
+```bash
 # Convert GTF files to BED for overlap comparison
 awk '$3 == "exon" {print $1, $4, $5, $9}' OFS="\t" transcripts_exon_filtered.gtf > transcripts_exons.bed
 awk '$3 == "exon" {print $1, $4, $5, $9}' OFS="\t" reference_annotations.gtf > annotated_exons.bed
@@ -44,7 +44,7 @@ grep -F -w -f <(sed 's/^/transcript_id "/; s/$/";/' transcripts_no_overlap.txt) 
 - We need a hexamer table and a logistic regression model set up as inputs to run CPAT. They have prebuilt this for model species but for any other species, we need to run the scripts provided with the CPAT tool to generate these.
 - Get the fasta sequences from the transcripts_exon_filtered_no_overlap.gtf using any tool such as [gffread](https://ccb.jhu.edu/software/stringtie/gff.shtml#gffread_ex). 
 
-```
+```bash
 # Creating a hexamer table using a fasta inputs of coding and non-coding sequences. This is to train the model to differentiate certain hexamers as coding and non-coding
 
 make_hexamer_tab -c coding_sequences.fa -n noncoding_sequences.fa > sratti_hexamer.tsv
